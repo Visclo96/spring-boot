@@ -71,32 +71,48 @@ class BeanDefinitionLoaderTests {
 		assertThat(this.registry.containsBean("myNamedComponent")).isTrue();
 	}
 
-	@Test
-	void loadXmlResource() {
-		ClassPathResource resource = new ClassPathResource("sample-beans.xml", getClass());
-		BeanDefinitionLoader loader = new BeanDefinitionLoader(this.registry, resource);
-		assertThat(load(loader)).isOne();
-		assertThat(this.registry.containsBean("myXmlComponent")).isTrue();
+	//-----------------------Modification 1---------------------------------
 
-	}
+ @ParameterizedTest
+ @CsvSource({
+		 "sample-beans.xml, myXmlComponent",
+		 "sample-beans.groovy, myGroovyComponent",
+		 "sample-namespace.groovy, myGroovyComponent",
+ })
+ void loadResourcesFromDifferentFormat(String sample, String component) {
+	 ClassPathResource resource = new ClassPathResource(sample, getClass());
+	 BeanDefinitionLoader loader = new BeanDefinitionLoader(this.registry, resource);
+	 assertThat(load(loader)).isOne();
+	 assertThat(this.registry.containsBean(component)).isTrue();
 
-	@Test
-	void loadGroovyResource() {
-		ClassPathResource resource = new ClassPathResource("sample-beans.groovy", getClass());
-		BeanDefinitionLoader loader = new BeanDefinitionLoader(this.registry, resource);
-		assertThat(load(loader)).isOne();
-		assertThat(this.registry.containsBean("myGroovyComponent")).isTrue();
+	//----------------------les 3 Tests ci-dessous sont remplacés   ----------------------------------
 
-	}
-
-	@Test
-	void loadGroovyResourceWithNamespace() {
-		ClassPathResource resource = new ClassPathResource("sample-namespace.groovy", getClass());
-		BeanDefinitionLoader loader = new BeanDefinitionLoader(this.registry, resource);
-		assertThat(load(loader)).isOne();
-		assertThat(this.registry.containsBean("myGroovyComponent")).isTrue();
-
-	}
+	// @Test
+	// void loadXmlResource() {
+	// 	ClassPathResource resource = new ClassPathResource("sample-beans.xml", getClass());
+	// 	BeanDefinitionLoader loader = new BeanDefinitionLoader(this.registry, resource);
+	// 	assertThat(load(loader)).isOne();
+	// 	assertThat(this.registry.containsBean("myXmlComponent")).isTrue();
+	//
+	// }
+	//
+	// @Test
+	// void loadGroovyResource() {
+	// 	ClassPathResource resource = new ClassPathResource("sample-beans.groovy", getClass());
+	// 	BeanDefinitionLoader loader = new BeanDefinitionLoader(this.registry, resource);
+	// 	assertThat(load(loader)).isOne();
+	// 	assertThat(this.registry.containsBean("myGroovyComponent")).isTrue();
+	//
+	// }
+	//
+	// @Test
+	// void loadGroovyResourceWithNamespace() {
+	// 	ClassPathResource resource = new ClassPathResource("sample-namespace.groovy", getClass());
+	// 	BeanDefinitionLoader loader = new BeanDefinitionLoader(this.registry, resource);
+	// 	assertThat(load(loader)).isOne();
+	// 	assertThat(this.registry.containsBean("myGroovyComponent")).isTrue();
+	//
+	// }
 
 	@Test
 	void loadPackage() {
