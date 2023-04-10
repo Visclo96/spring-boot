@@ -99,7 +99,7 @@ public class ClassPathChangeUploader implements ApplicationListener<ClassPathCha
 		}
 	}
 
-	private void performUpload(ClassLoaderFiles classLoaderFiles, byte[] bytes, ClassPathChangedEvent event)
+	private void performUpload(byte[] bytes, ClassPathChangedEvent event)
 			throws IOException {
 		try {
 			while (true) {
