@@ -66,26 +66,7 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 		this.cache = new SoftReferenceConfigurationPropertyCache<>(isImmutablePropertySource());
 	}
 
-	private BiPredicate<ConfigurationPropertyName, ConfigurationPropertyName> getAncestorOfCheck(
-			PropertyMapper[] mappers) {
-		BiPredicate<ConfigurationPropertyName, ConfigurationPropertyName> ancestorOfCheck = mappers[0]
-				.getAncestorOfCheck();
-		for (int i = 1; i < mappers.length; i++) {
-			ancestorOfCheck = ancestorOfCheck.or(mappers[i].getAncestorOfCheck());
-		}
-		return ancestorOfCheck;
-	}
-
-	private void assertEnumerablePropertySource() {
-		if (getPropertySource() instanceof MapPropertySource mapSource) {
-			try {
-				mapSource.getSource().size();
-			}
-			catch (UnsupportedOperationException ex) {
-				throw new IllegalArgumentException("PropertySource must be fully enumerable");
-			}
-		}
-	}
+	
 
 	@Override
 	public ConfigurationPropertyCaching getCaching() {
@@ -138,6 +119,27 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 			}
 		}
 		return ConfigurationPropertyState.ABSENT;
+	}
+	
+	private BiPredicate<ConfigurationPropertyName, ConfigurationPropertyName> getAncestorOfCheck(
+			PropertyMapper[] mappers) {
+		BiPredicate<ConfigurationPropertyName, ConfigurationPropertyName> ancestorOfCheck = mappers[0]
+				.getAncestorOfCheck();
+		for (int i = 1; i < mappers.length; i++) {
+			ancestorOfCheck = ancestorOfCheck.or(mappers[i].getAncestorOfCheck());
+		}
+		return ancestorOfCheck;
+	}
+
+	private void assertEnumerablePropertySource() {
+		if (getPropertySource() instanceof MapPropertySource mapSource) {
+			try {
+				mapSource.getSource().size();
+			}
+			catch (UnsupportedOperationException ex) {
+				throw new IllegalArgumentException("PropertySource must be fully enumerable");
+			}
+		}
 	}
 
 	private ConfigurationPropertyName[] getConfigurationPropertyNames() {
