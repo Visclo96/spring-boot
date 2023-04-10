@@ -111,38 +111,48 @@ public class ConfigurationMetadata {
 		return flattenValues(this.hints);
 	}
 
-	protected void mergeItemMetadata(ItemMetadata metadata) {
-		ItemMetadata matching = findMatchingItemMetadata(metadata);
-		if (matching != null) {
-			if (metadata.getDescription() != null) {
-				matching.setDescription(metadata.getDescription());
-			}
-			if (metadata.getDefaultValue() != null) {
-				matching.setDefaultValue(metadata.getDefaultValue());
-			}
-			ItemDeprecation deprecation = metadata.getDeprecation();
-			ItemDeprecation matchingDeprecation = matching.getDeprecation();
-			if (deprecation != null) {
-				if (matchingDeprecation == null) {
-					matching.setDeprecation(deprecation);
-				}
-				else {
-					if (deprecation.getReason() != null) {
-						matchingDeprecation.setReason(deprecation.getReason());
-					}
-					if (deprecation.getReplacement() != null) {
-						matchingDeprecation.setReplacement(deprecation.getReplacement());
-					}
-					if (deprecation.getLevel() != null) {
-						matchingDeprecation.setLevel(deprecation.getLevel());
-					}
-				}
-			}
-		}
-		else {
-			add(this.items, metadata.getName(), metadata, false);
-		}
-	}
+protected void fillingMetadata(ItemMetadata metadata, ItemMetadata matching){
+  if (matching != null) {
+    if (metadata.getDescription() != null) {
+      matching.setDescription(metadata.getDescription());
+    }
+    if (metadata.getDefaultValue() != null) {
+      matching.setDefaultValue(metadata.getDefaultValue());
+    }
+}
+
+  protected void fillingDeprecationMetadata(ItemMetadata metadata, ItemMetadata matching){
+    ItemDeprecation deprecation = metadata.getDeprecation();
+    ItemDeprecation matchingDeprecation = matching.getDeprecation();
+    if (deprecation != null) {
+      if (matchingDeprecation == null) {
+        matching.setDeprecation(deprecation);
+      }
+      else {
+        if (deprecation.getReason() != null) {
+          matchingDeprecation.setReason(deprecation.getReason());
+        }
+        if (deprecation.getReplacement() != null) {
+          matchingDeprecation.setReplacement(deprecation.getReplacement());
+        }
+        if (deprecation.getLevel() != null) {
+          matchingDeprecation.setLevel(deprecation.getLevel());
+        }
+      }
+    }
+  }
+  }
+
+  protected void mergeItemMetadata(ItemMetadata metadata) {
+  ItemMetadata matching = findMatchingItemMetadata(metadata);
+  if (matching != null) {
+    fillingMetadata(metadata, matching);
+    fillingDeprecationMetadata(metadata, matching);
+  }
+  else {
+    add(this.items, metadata.getName(), metadata, false);
+  }
+}
 
 	private <K, V> void add(Map<K, List<V>> map, K key, V value, boolean ifMissing) {
 		List<V> values = map.computeIfAbsent(key, (k) -> new ArrayList<>());
