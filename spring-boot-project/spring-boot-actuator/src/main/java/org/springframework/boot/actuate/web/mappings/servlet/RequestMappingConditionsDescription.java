@@ -18,6 +18,7 @@ package org.springframework.boot.actuate.web.mappings.servlet;
 
 import java.util.List;
 import java.util.Set;
+import org.springframework.boot.actuate.web.mappings.RequestMappingAbstractCondition ;
 
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.condition.MediaTypeExpression;
@@ -31,31 +32,15 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
  * @author Andy Wilkinson
  * @since 2.0.0
  */
-public class RequestMappingConditionsDescription {
+public class RequestMappingConditionsDescription extends RequestMappingAbstractCondition  {
 
-	private final List<MediaTypeExpressionDescription> consumes;
 
-	private final List<NameValueExpressionDescription> headers;
 
-	private final Set<RequestMethod> methods;
-
-	private final List<NameValueExpressionDescription> params;
-
-	private final Set<String> patterns;
-
-	private final List<MediaTypeExpressionDescription> produces;
 
 	RequestMappingConditionsDescription(RequestMappingInfo requestMapping) {
-		this.consumes = requestMapping.getConsumesCondition().getExpressions().stream()
-				.map(MediaTypeExpressionDescription::new).toList();
-		this.headers = requestMapping.getHeadersCondition().getExpressions().stream()
-				.map(NameValueExpressionDescription::new).toList();
-		this.methods = requestMapping.getMethodsCondition().getMethods();
-		this.params = requestMapping.getParamsCondition().getExpressions().stream()
-				.map(NameValueExpressionDescription::new).toList();
-		this.patterns = extractPathPatterns(requestMapping);
-		this.produces = requestMapping.getProducesCondition().getExpressions().stream()
-				.map(MediaTypeExpressionDescription::new).toList();
+		super(requestMapping);
+		super.patterns = extractPathPatterns(requestMapping);
+		
 	}
 
 	private Set<String> extractPathPatterns(RequestMappingInfo requestMapping) {
@@ -64,83 +49,5 @@ public class RequestMappingConditionsDescription {
 				: requestMapping.getPathPatternsCondition().getPatternValues();
 	}
 
-	public List<MediaTypeExpressionDescription> getConsumes() {
-		return this.consumes;
-	}
-
-	public List<NameValueExpressionDescription> getHeaders() {
-		return this.headers;
-	}
-
-	public Set<RequestMethod> getMethods() {
-		return this.methods;
-	}
-
-	public List<NameValueExpressionDescription> getParams() {
-		return this.params;
-	}
-
-	public Set<String> getPatterns() {
-		return this.patterns;
-	}
-
-	public List<MediaTypeExpressionDescription> getProduces() {
-		return this.produces;
-	}
-
-	/**
-	 * A description of a {@link MediaTypeExpression} in a request mapping condition.
-	 */
-	public static class MediaTypeExpressionDescription {
-
-		private final String mediaType;
-
-		private final boolean negated;
-
-		MediaTypeExpressionDescription(MediaTypeExpression expression) {
-			this.mediaType = expression.getMediaType().toString();
-			this.negated = expression.isNegated();
-		}
-
-		public String getMediaType() {
-			return this.mediaType;
-		}
-
-		public boolean isNegated() {
-			return this.negated;
-		}
-
-	}
-
-	/**
-	 * A description of a {@link NameValueExpression} in a request mapping condition.
-	 */
-	public static class NameValueExpressionDescription {
-
-		private final String name;
-
-		private final Object value;
-
-		private final boolean negated;
-
-		NameValueExpressionDescription(NameValueExpression<?> expression) {
-			this.name = expression.getName();
-			this.value = expression.getValue();
-			this.negated = expression.isNegated();
-		}
-
-		public String getName() {
-			return this.name;
-		}
-
-		public Object getValue() {
-			return this.value;
-		}
-
-		public boolean isNegated() {
-			return this.negated;
-		}
-
-	}
 
 }
