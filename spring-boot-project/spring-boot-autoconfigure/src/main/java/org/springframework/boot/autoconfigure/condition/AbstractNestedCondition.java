@@ -105,7 +105,7 @@ public abstract class AbstractNestedCondition extends SpringBootCondition implem
 
 		private final MetadataReaderFactory readerFactory;
 
-		private final Map<AnnotationMetadata, List<Condition>> memberConditions;
+		private final Map<AnnotationMetadata, List<Condition>> memberConditionsMap;
 
 		MemberConditions(ConditionContext context, ConfigurationPhase phase, String className) {
 			this.context = context;
@@ -116,7 +116,7 @@ public abstract class AbstractNestedCondition extends SpringBootCondition implem
 
 		private Map<AnnotationMetadata, List<Condition>> getMemberConditions(String[] members, ConfigurationPhase phase,
 				String className) {
-			MultiValueMap<AnnotationMetadata, Condition> memberConditions = new LinkedMultiValueMap<>();
+			MultiValueMap<AnnotationMetadata, Condition> memberConditionsMap = new LinkedMultiValueMap<>();
 			for (String member : members) {
 				AnnotationMetadata metadata = getMetadata(member);
 				for (String[] conditionClasses : getConditionClasses(metadata)) {
