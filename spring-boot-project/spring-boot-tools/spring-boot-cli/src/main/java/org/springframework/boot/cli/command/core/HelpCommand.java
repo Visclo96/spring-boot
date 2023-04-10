@@ -88,10 +88,15 @@ public class HelpCommand extends AbstractCommand {
 	}
 
 	@Override
-	public ExitStatus run(String... args) throws Exception {
+	public ExitStatus run(String... args) {
+		try{
 		if (args.length == 0) {
 			throw new NoHelpCommandArgumentsException();
-		}
+		}catch(noHelpCommandArgumentsException e)
+			{
+				log.error(e.getmessage());
+			}
+		try{
 		String commandName = args[0];
 		for (Command command : this.commandRunner) {
 			if (command.getName().equals(commandName)) {
@@ -120,6 +125,9 @@ public class HelpCommand extends AbstractCommand {
 			}
 		}
 		throw new NoSuchCommandException(commandName);
-	}
+		} catch(NoSuchCommandException e)
+		{
+		log.error(e.getMessage());
+		}
 
 }
