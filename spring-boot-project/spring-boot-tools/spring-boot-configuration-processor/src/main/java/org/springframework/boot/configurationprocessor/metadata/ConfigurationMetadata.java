@@ -110,7 +110,10 @@ public class ConfigurationMetadata {
 	public List<ItemHint> getHints() {
 		return flattenValues(this.hints);
 	}
-
+/**this function is supposed to be used in mergeItemMetadata.
+* the purpose of this function is to duplicate Metadata Description/Value if there is.
+*@params matching will be given by the mergeItemMetadata function.
+*/
 protected void fillingMetadata(ItemMetadata metadata, ItemMetadata matching){
   if (matching != null) {
     if (metadata.getDescription() != null) {
@@ -120,7 +123,10 @@ protected void fillingMetadata(ItemMetadata metadata, ItemMetadata matching){
       matching.setDefaultValue(metadata.getDefaultValue());
     }
 }
-
+/**this function is supposed to be used in mergeItemMetadata.
+* the purpose of this function is to duplicate Metadata Depreciation, reason level and replacement if there is.
+*@params matching will be given by the mergeItemMetadata function.
+*/
   protected void fillingDeprecationMetadata(ItemMetadata metadata, ItemMetadata matching){
     ItemDeprecation deprecation = metadata.getDeprecation();
     ItemDeprecation matchingDeprecation = matching.getDeprecation();
